@@ -1,0 +1,30 @@
+﻿@if (Session["MenuMaster"] != null)
+{
+
+    var MenuMaster = (List<BKBBoard.Models.MenuModels>)Session["MenuMaster"];
+    var loginDetails = (BKBBoard.Models.LoginModels)Session["LoginCredentials"];
+    var groupByMenu = MenuMaster.Where(x => x.MenuStatus == "3").ToList();
+
+
+    if (loginDetails.RoleName == "1")
+    {
+        groupByMenu = MenuMaster.ToList();
+    }
+    else if (loginDetails.RoleName == "2")
+    {
+        groupByMenu = MenuMaster.Where(x => x.MenuStatus != "1").ToList();
+    }
+    else if(loginDetails.RoleName == "3")
+    {
+        groupByMenu = MenuMaster.Where(x => x.MenuStatus == "3").ToList();
+    }
+    
+    foreach (var MenuList in groupByMenu)
+    {
+
+
+    <li>@Html.ActionLink(MenuList.MainMenuName, MenuList.ActionName, MenuList.ControllerName )</li>;
+
+    }
+
+}

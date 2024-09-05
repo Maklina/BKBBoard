@@ -1,0 +1,105 @@
+﻿@model BKBBoard.Models.MeetingViewModel
+
+@{
+    ViewBag.Title = "Create Meeting";
+}
+@if (TempData["errMsg"] != null)
+{
+    <h3 style="color:red;">@TempData["errMsg"]</h3>
+}
+else
+{
+    <h3 style="color:green;">@TempData["retMsg"]</h3>
+}
+
+@using (Html.BeginForm("UploadMinutes", "Minutes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mMaster.MeetingType, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.mMaster.MeetingType, new SelectList(Model.meetingTypeList, "value", "text"), "Select List",
+                        new { @class = "form-control input-sm", @required = "required", @id = "MeetingType", })
+                @Html.ValidationMessageFor(model => model.mMaster.MeetingType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.mMaster.MeetingNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("meetingNo", new SelectList(string.Empty, "Value", "Text"),
+                            new { @class = "form-control", @id = "meetingNo" })
+                @Html.ValidationMessageFor(model => model.mMaster.MeetingNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Minutesfile, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                <input type="file" name="Minutesfile" class="form-control" required="required">
+                @*@Html.TextBoxFor(model => model.file, new { htmlAttributes = new { @class = "form-control",@type="file" } })
+                    @Html.ValidationMessageFor(model => model.circularCategory, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $("#MeetingType").change(function () {
+            debugger;
+            var MeetingType = $("#MeetingType").val();
+            $("select[id$=meetingNo] > option").remove();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("getMeetingNo")',
+                dataType: 'json',
+                data: { typeId: MeetingType },
+                success: function (data) {
+                    $.each(data, function (i, data) {
+                        $("#meetingNo").append('<option value="'
+                                                   + data.Value + '">'
+                                             + data.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed.' + ex);
+                }
+            });
+            return false;
+        });
+        return false;
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MeetingType").val($("#MeetingType option:selected").val());
+        $("#meetingNo").val($("#meetingNo option:selected").val());
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MeetingType").select2();
+        $("#meetingNo").select2();
+    });
+</script>
+
+<script>
+
+</script>
+<script src="~/scripts/select2.min.js"></script>
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
+

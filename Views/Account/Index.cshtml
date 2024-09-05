@@ -1,0 +1,128 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<BKBBoard.Models.AccountInfo>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h4 style="color:red">@TempData["errMsg"]</h4>
+
+<div class="form-group col-md-offset-5">
+    <a href="@Url.Action("Create")" class="btn btn-primary btn-lg" role="button" style="background-color: #07889B">Add User</a>
+</div>
+
+<div class="table-holder" style="overflow-x: auto">
+    <table class="table">
+        <tr>
+            <th>
+                SL
+            </th>
+            <th>
+                User ID
+            </th>
+
+            <th>
+                User Name
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Department
+            </th>
+
+            <th>
+                Created By
+            </th>
+            <th>
+                Created On
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Change Status
+            </th>
+        </tr>
+        @{
+            var s = 1;
+        }
+        @foreach (var item in Model)
+        {
+            var thisOne = 0;
+            if (item.id.ToString() == Request["__id"])
+            {
+                thisOne = 1;
+            }
+
+            <tr id="@(thisOne)">
+                <td>
+                    @(s)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userRole)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.userDept)
+                </td>
+
+                <th>
+                    @Html.DisplayFor(model => item.createdBy)
+                </th>
+                <th>
+                    @Html.DisplayFor(model => item.createdOn)
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isActive)
+                </td>
+                <td>
+                    @if (item.isActive == "Active")
+                    {
+                        @Html.ActionLink("Deactivate", "changeStatus", new { id = item.id, changeTo = "0" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Activate", "changeStatus", new { id = item.id, changeTo = "1" })
+                    }
+
+                </td>
+            </tr>
+            s++;
+        }
+
+    </table>
+</div>
+<br />
+
+
+<div class="pagi">
+    <a>&laquo;</a>
+    @for (int i = 1; i <= Model.PageCount; i++)
+    {
+        if (Model.PageNumber == i)
+        {
+            <a href="@Url.Action("index",new { page=i })" class="active">@i</a>;
+        }
+        else
+        {
+            <a href="@Url.Action("index",new { page=i })">@i</a>
+        }
+    }
+    <a>&raquo;</a>
+</div>
+<script>
+
+    $(document).ready(function () {
+
+
+        $("#1").attr("style", "background-color: #E37222");
+
+
+    });
+</script>

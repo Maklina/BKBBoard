@@ -1,0 +1,495 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BKBBoardModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="deptName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="deptShortcode" Type="nvarchar" MaxLength="200" />
+          <Property Name="deptEmail" Type="nvarchar" MaxLength="200" />
+          <Property Name="createdOn" Type="date" />
+          <Property Name="createdBy" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="loginUser">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="userName" Type="varchar" MaxLength="200" />
+          <Property Name="userRole" Type="varchar" MaxLength="50" />
+          <Property Name="userDept" Type="varchar" MaxLength="200" />
+          <Property Name="isActive" Type="varchar" MaxLength="20" />
+          <Property Name="createdBy" Type="varchar" MaxLength="200" />
+          <Property Name="createdOn" Type="datetime" />
+          <Property Name="updatedBy" Type="varchar" MaxLength="200" />
+          <Property Name="updatedOn" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MainMenu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="main_menu" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="menuStatus" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="menu_action" Type="varchar" MaxLength="50" />
+          <Property Name="menu_controller" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MeetingDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeetingID" Type="int" Nullable="false" />
+          <Property Name="MemoSerial" Type="int" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar(max)" />
+          <Property Name="Dept" Type="int" Nullable="false" />
+          <Property Name="memoURL" Type="varchar(max)" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="UserMemoFileName" Type="nvarchar(max)" />
+          <Property Name="MemoSubSerial" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="MeetingMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeetingNo" Type="int" Nullable="false" />
+          <Property Name="MeetingType" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AgendaURL" Type="varchar(max)" Nullable="false" />
+          <Property Name="MinutesURL" Type="varchar(max)" Nullable="false" />
+          <Property Name="CreatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="datetime" />
+          <Property Name="UpdatedBy" Type="varchar" MaxLength="50" />
+          <Property Name="UpdatedOn" Type="datetime" />
+          <Property Name="UserFileName" Type="nvarchar(max)" />
+          <Property Name="UserMinuteFileName" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="meetingType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="role_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="role_priority" Type="int" />
+          <Property Name="role_description" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="RoleMenuMapping">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserRoleId" Type="int" Nullable="false" />
+          <Property Name="SubMenuId" Type="int" Nullable="false" />
+          <Property Name="IsActive" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubMenu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="main_menu_id" Type="int" Nullable="false" />
+          <Property Name="sub_menu_name" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="menu_action" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="menu_controller" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_RoleMenuMap_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="RoleMenuMapping" Type="Self.RoleMenuMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleMenuMapping">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleMenuMap_SubMenu">
+          <End Role="SubMenu" Type="Self.SubMenu" Multiplicity="1" />
+          <End Role="RoleMenuMapping" Type="Self.RoleMenuMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubMenu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleMenuMapping">
+              <PropertyRef Name="SubMenuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SMainMenu_Role">
+          <End Role="MainMenu" Type="Self.MainMenu" Multiplicity="1" />
+          <End Role="SubMenu" Type="Self.SubMenu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MainMenu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="SubMenu">
+              <PropertyRef Name="main_menu_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BKBBoardModelStoreContainer">
+          <EntitySet Name="department" EntityType="Self.department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="loginUser" EntityType="Self.loginUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainMenu" EntityType="Self.MainMenu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingDetails" EntityType="Self.MeetingDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingMaster" EntityType="Self.MeetingMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="meetingType" EntityType="Self.meetingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RoleMenuMapping" EntityType="Self.RoleMenuMapping" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SubMenu" EntityType="Self.SubMenu" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_RoleMenuMap_Role" Association="Self.fk_RoleMenuMap_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="RoleMenuMapping" EntitySet="RoleMenuMapping" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleMenuMap_SubMenu" Association="Self.fk_RoleMenuMap_SubMenu">
+            <End Role="SubMenu" EntitySet="SubMenu" />
+            <End Role="RoleMenuMapping" EntitySet="RoleMenuMapping" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SMainMenu_Role" Association="Self.fk_SMainMenu_Role">
+            <End Role="MainMenu" EntitySet="MainMenu" />
+            <End Role="SubMenu" EntitySet="SubMenu" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BKBBoardModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="department">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="deptName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="deptShortcode" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="deptEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="createdOn" Type="DateTime" Precision="0" />
+          <Property Name="createdBy" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="loginUser">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="userName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="userRole" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="userDept" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="isActive" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="createdBy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="createdOn" Type="DateTime" Precision="3" />
+          <Property Name="updatedBy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="updatedOn" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="MainMenu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="main_menu" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="menuStatus" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="menu_action" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="menu_controller" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SubMenus" Relationship="Self.fk_SMainMenu_Role" FromRole="MainMenu" ToRole="SubMenu" />
+        </EntityType>
+        <EntityType Name="MeetingDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeetingID" Type="Int32" Nullable="false" />
+          <Property Name="MemoSerial" Type="Int32" Nullable="false" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Dept" Type="Int32" Nullable="false" />
+          <Property Name="memoURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UserMemoFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MemoSubSerial" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MeetingMaster">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeetingNo" Type="Int32" Nullable="false" />
+          <Property Name="MeetingType" Type="Int32" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AgendaURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MinutesURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CreatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="UserFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserMinuteFileName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="meetingType">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="role_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="role_priority" Type="Int32" />
+          <Property Name="role_description" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RoleMenuMappings" Relationship="Self.fk_RoleMenuMap_Role" FromRole="Role" ToRole="RoleMenuMapping" />
+        </EntityType>
+        <EntityType Name="RoleMenuMapping">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserRoleId" Type="Int32" Nullable="false" />
+          <Property Name="SubMenuId" Type="Int32" Nullable="false" />
+          <Property Name="IsActive" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.fk_RoleMenuMap_Role" FromRole="RoleMenuMapping" ToRole="Role" />
+          <NavigationProperty Name="SubMenu" Relationship="Self.fk_RoleMenuMap_SubMenu" FromRole="RoleMenuMapping" ToRole="SubMenu" />
+        </EntityType>
+        <EntityType Name="SubMenu">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="main_menu_id" Type="Int32" Nullable="false" />
+          <Property Name="sub_menu_name" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="menu_action" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="menu_controller" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="MainMenu" Relationship="Self.fk_SMainMenu_Role" FromRole="SubMenu" ToRole="MainMenu" />
+          <NavigationProperty Name="RoleMenuMappings" Relationship="Self.fk_RoleMenuMap_SubMenu" FromRole="SubMenu" ToRole="RoleMenuMapping" />
+        </EntityType>
+        <Association Name="fk_SMainMenu_Role">
+          <End Role="MainMenu" Type="Self.MainMenu" Multiplicity="1" />
+          <End Role="SubMenu" Type="Self.SubMenu" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MainMenu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="SubMenu">
+              <PropertyRef Name="main_menu_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleMenuMap_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="RoleMenuMapping" Type="Self.RoleMenuMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleMenuMapping">
+              <PropertyRef Name="UserRoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_RoleMenuMap_SubMenu">
+          <End Role="SubMenu" Type="Self.SubMenu" Multiplicity="1" />
+          <End Role="RoleMenuMapping" Type="Self.RoleMenuMapping" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SubMenu">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="RoleMenuMapping">
+              <PropertyRef Name="SubMenuId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BKBBoardEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="departments" EntityType="Self.department" />
+          <EntitySet Name="loginUsers" EntityType="Self.loginUser" />
+          <EntitySet Name="MainMenus" EntityType="Self.MainMenu" />
+          <EntitySet Name="MeetingDetails" EntityType="Self.MeetingDetail" />
+          <EntitySet Name="MeetingMasters" EntityType="Self.MeetingMaster" />
+          <EntitySet Name="meetingTypes" EntityType="Self.meetingType" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="RoleMenuMappings" EntityType="Self.RoleMenuMapping" />
+          <EntitySet Name="SubMenus" EntityType="Self.SubMenu" />
+          <AssociationSet Name="fk_SMainMenu_Role" Association="Self.fk_SMainMenu_Role">
+            <End Role="MainMenu" EntitySet="MainMenus" />
+            <End Role="SubMenu" EntitySet="SubMenus" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleMenuMap_Role" Association="Self.fk_RoleMenuMap_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="RoleMenuMapping" EntitySet="RoleMenuMappings" />
+          </AssociationSet>
+          <AssociationSet Name="fk_RoleMenuMap_SubMenu" Association="Self.fk_RoleMenuMap_SubMenu">
+            <End Role="SubMenu" EntitySet="SubMenus" />
+            <End Role="RoleMenuMapping" EntitySet="RoleMenuMappings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BKBBoardModelStoreContainer" CdmEntityContainer="BKBBoardEntities">
+          <EntitySetMapping Name="departments">
+            <EntityTypeMapping TypeName="BKBBoardModel.department">
+              <MappingFragment StoreEntitySet="department">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="deptName" ColumnName="deptName" />
+                <ScalarProperty Name="deptShortcode" ColumnName="deptShortcode" />
+                <ScalarProperty Name="deptEmail" ColumnName="deptEmail" />
+                <ScalarProperty Name="createdOn" ColumnName="createdOn" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="loginUsers">
+            <EntityTypeMapping TypeName="BKBBoardModel.loginUser">
+              <MappingFragment StoreEntitySet="loginUser">
+                <ScalarProperty Name="updatedOn" ColumnName="updatedOn" />
+                <ScalarProperty Name="updatedBy" ColumnName="updatedBy" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="userName" ColumnName="userName" />
+                <ScalarProperty Name="userRole" ColumnName="userRole" />
+                <ScalarProperty Name="userDept" ColumnName="userDept" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+                <ScalarProperty Name="createdOn" ColumnName="createdOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainMenus">
+            <EntityTypeMapping TypeName="BKBBoardModel.MainMenu">
+              <MappingFragment StoreEntitySet="MainMenu">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="main_menu" ColumnName="main_menu" />
+                <ScalarProperty Name="menuStatus" ColumnName="menuStatus" />
+                <ScalarProperty Name="menu_action" ColumnName="menu_action" />
+                <ScalarProperty Name="menu_controller" ColumnName="menu_controller" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingDetails">
+            <EntityTypeMapping TypeName="BKBBoardModel.MeetingDetail">
+              <MappingFragment StoreEntitySet="MeetingDetails">
+                <ScalarProperty Name="MemoSubSerial" ColumnName="MemoSubSerial" />
+                <ScalarProperty Name="UserMemoFileName" ColumnName="UserMemoFileName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MeetingID" ColumnName="MeetingID" />
+                <ScalarProperty Name="MemoSerial" ColumnName="MemoSerial" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Dept" ColumnName="Dept" />
+                <ScalarProperty Name="memoURL" ColumnName="memoURL" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingMasters">
+            <EntityTypeMapping TypeName="BKBBoardModel.MeetingMaster">
+              <MappingFragment StoreEntitySet="MeetingMaster">
+                <ScalarProperty Name="UserMinuteFileName" ColumnName="UserMinuteFileName" />
+                <ScalarProperty Name="UserFileName" ColumnName="UserFileName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MeetingNo" ColumnName="MeetingNo" />
+                <ScalarProperty Name="MeetingType" ColumnName="MeetingType" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AgendaURL" ColumnName="AgendaURL" />
+                <ScalarProperty Name="MinutesURL" ColumnName="MinutesURL" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="UpdatedOn" ColumnName="UpdatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="meetingTypes">
+            <EntityTypeMapping TypeName="BKBBoardModel.meetingType">
+              <MappingFragment StoreEntitySet="meetingType">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="BKBBoardModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="role_name" ColumnName="role_name" />
+                <ScalarProperty Name="role_priority" ColumnName="role_priority" />
+                <ScalarProperty Name="role_description" ColumnName="role_description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RoleMenuMappings">
+            <EntityTypeMapping TypeName="BKBBoardModel.RoleMenuMapping">
+              <MappingFragment StoreEntitySet="RoleMenuMapping">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UserRoleId" ColumnName="UserRoleId" />
+                <ScalarProperty Name="SubMenuId" ColumnName="SubMenuId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SubMenus">
+            <EntityTypeMapping TypeName="BKBBoardModel.SubMenu">
+              <MappingFragment StoreEntitySet="SubMenu">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="main_menu_id" ColumnName="main_menu_id" />
+                <ScalarProperty Name="sub_menu_name" ColumnName="sub_menu_name" />
+                <ScalarProperty Name="menu_action" ColumnName="menu_action" />
+                <ScalarProperty Name="menu_controller" ColumnName="menu_controller" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

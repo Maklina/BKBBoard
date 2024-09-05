@@ -1,0 +1,86 @@
+﻿@model BKBBoard.Models.MeetingViewModel
+
+@{
+    ViewBag.Title = "ViewDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<h4 style="font-weight:bold;color:red;">@TempData["retMsg"]</h4>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.mMaster.MeetingType)</th>
+        <td>@Html.DisplayFor(model => model.mMaster.MeetingType)</td>
+        <th> @Html.DisplayNameFor(model => model.mMaster.MeetingNo)</th>
+        <td>@Html.DisplayFor(model => model.mMaster.MeetingNo)</td>
+        <th>@Html.DisplayNameFor(model => model.mMaster.Title)</th>
+        <td>@Html.DisplayFor(model => model.mMaster.Title)</td>
+    <tr>
+        <th> @Html.DisplayNameFor(model => model.mMaster.Date)</th>
+        <td>@Html.DisplayFor(model => model.mMaster.Date)</td>
+        <th> Download Agenda</th>
+        <td>
+            <a title="@Model.mMaster.UserFileName" href="@Url.Action("Download",new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mMaster.AgendaURL } )"><img src="~/Image/download.ico" height="25" width="25" style="display: block; "></a>
+        </td>
+        <th>  Download Minutes</th>
+        <td>
+            @if (Model.mMaster.MinutesURL != " ")
+            {
+                <a title="@Model.mMaster.UserMinuteFileName" href="@Url.Action("Download", new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mMaster.MinutesURL })"><img src="~/Image/download.ico" height="25" width="25" style="display: block; "></a>
+            }
+            else
+            {
+                <b> Not Uploaded </b>
+            }
+        </td>
+    </tr>
+</table>
+<div style="height: 350px;">
+    <div class="row table-responsive" style="height: 344px; overflow: auto;background-color: honeydew; border-radius:10px 12px; padding: 5px">
+        <table class="table" id="unadjustedLoanTable">
+            @if (Model.mDetails != null)
+            {
+                <tr style="text-align:center">
+
+                    <th width="4%">
+                        Memo Serial
+                    </th>
+                    <th width="68%">
+                        Subject
+                    </th>
+                    <th width="24%">
+                        Department
+                    </th>
+                    <th width="8%">
+                        Download Memo File
+                    </th>
+                </tr>
+                for (int i = 0; i < Model.mDetails.Count(); i++)
+                {
+                    <tr>
+
+                        <td>
+                            @Html.DisplayFor(model => model.mDetails[i].MemoNo, new { htmlAttributes = new { @class = "form-control input-sm", @id = "outstandingAmount" } })
+                        </td>
+                        <td style=" text-align: justify; text-justify: inter-word;">
+                            @Html.DisplayFor(model => model.mDetails[i].MemoSubject, new { htmlAttributes = new { @class = "form-control input-sm", @id = "montlyDeductionAmount" } })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.mDetails[i].deptName, new { htmlAttributes = new { @class = "form-control input-sm", @type = "text", @id = "loanAccountNumber" } })
+                        </td>
+                        <td>
+                            @if (Model.mDetails[i].memoURL != null)
+                            {
+                                <a title="@Model.mDetails[i].UserMemoFileName" href="@Url.Action("Download",new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mDetails[i].memoURL } )"><img src="~/Image/download.ico" height="25" width="25" style="display: block; "></a>
+                            }
+                            else
+                            {
+                                <b> Not Uploaded </b>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>

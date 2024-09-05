@@ -1,0 +1,295 @@
+﻿@model BKBBoard.Models.MeetingViewModel
+
+@{
+    ViewBag.Title = "EditMeeting";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .checkbox {
+        background-color: #E37222
+    }
+</style>
+
+
+@using (Html.BeginForm("EditMeeting", "Meeting", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.HiddenFor(model => model.mMaster.ID, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.HiddenFor(model => model.mMaster.CreatedBy, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.HiddenFor(model => model.mMaster.CreatedOn, new { htmlAttributes = new { @class = "form-control" } })
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.mMaster.MeetingType, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.mMaster.MeetingType, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.mMaster.MeetingType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.mMaster.MeetingNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.mMaster.MeetingNo, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.mMaster.MeetingNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.mMaster.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.mMaster.Title, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.mMaster.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.mMaster.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.mMaster.Date, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.mMaster.Date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row table-responsive" style="background-color: honeydew; border-radius:10px 12px; padding: 5px">
+            <br />
+            <table class="table">
+
+                <tr style="text-align:center">
+                    <th></th>
+                    <th></th>
+                    <th>Previously Uploaded Agenda</th>
+                    <th>Update Agenda</th>
+                </tr>
+                <tr id="a" style="background-color: transparent">
+                    <td>@Html.CheckBoxFor(model => model.agendaChecked, new { htmlAttributes = new { @class = "form-control checkbox", @id = "agendaChecked" } })</td>
+
+                    <td><b> @Html.DisplayNameFor(model => model.mMaster.AgendaURL)</b></td>
+                    <td>
+                        <a title="@Model.mMaster.UserFileName" href="@Url.Action("Download",new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mMaster.AgendaURL } )"><img src="~/Image/download.ico" height="25" width="25" style="display: block;margin-left: 30%;margin-right: auto;"></a>
+                    </td>
+                    <td>
+                        <input type="file" name="Agendafile" id="Agendafile" class="form-control" disabled="disabled">
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Previously Uploaded Minutes</th>
+                    <th>Update Minutes</th>
+                </tr>
+                <tr id="m" style="background-color: transparent">
+                    <td>@Html.CheckBoxFor(model => model.minutesChecked, new { htmlAttributes = new { @class = "form-control checkbox", @id = "minutesChecked" } })</td>
+
+                    <td><b>@Html.DisplayNameFor(model => model.mMaster.MinutesURL)</b> </td>
+                    <td>
+                        @if (Model.mMaster.MinutesURL != " ")
+                        {
+                            <a title="@Model.mMaster.UserMinuteFileName" href="@Url.Action("Download", new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mMaster.MinutesURL })"><img src="~/Image/download.ico" height="25" width="25" style="display: block;margin-left: 30%;margin-right: auto;"></a>
+                        }
+                        else
+                        {
+                            <b> Not Uploaded </b>}
+                    </td>
+                    <td>
+                        <input type="file" name="Minutesfile" id="Minutesfile" class="form-control" disabled="disabled">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br /><br />
+        <div style="height: 300px;">
+            <div class="row table-responsive" style="height: 294px; overflow: auto; background-color: honeydew; border-radius:10px 12px; padding: 5px">
+                <table class="table">
+
+                    @if (Model.mDetails != null)
+                    {
+                        <tr style="text-align:center">
+                            <th width="4%">
+
+                            </th>
+                            <th width="4%">
+                                Sl
+                            </th>
+                            <th width="48%">
+                                Subject
+                            </th>
+                            <th width="24%">
+                                Department
+                            </th>
+                            <th width="4%">
+                                Previously<br />Uploaded<br />Memo
+                            </th>
+                            <th width="16%">
+                                Update Memo
+                            </th>
+                        </tr>
+                        for (int i = 0; i < Model.mDetails.Count(); i++)
+                        {
+                            <tr id="memoList@(i)" style="background-color: transparent">
+                                <td width="4%">
+                                    <b onclick="highlight(@i); ">
+                                        @Html.CheckBoxFor(model => model.mDetails[i].isChecked, new { htmlAttributes = new { @class = "form-control checkbox", @id = "memoChecked" + @i } })
+                                    </b>
+                                    @Html.HiddenFor(model => model.mDetails[i].ID, new { htmlAttributes = new { @class = "form-control" } })
+
+                                </td>
+                                <td width="4%">
+                                    @Html.DisplayFor(model => model.mDetails[i].MemoNo, new { htmlAttributes = new { @class = "form-control input-sm" } })
+                                    @Html.HiddenFor(model => model.mDetails[i].MemoNo, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td width="48%">
+                                    @Html.EditorFor(model => model.mDetails[i].MemoSubject, new { htmlAttributes = new { @id = "MemoSubject" + @i, @class = "form-control input-sm", @disabled = "disabled" } })
+                                    @Html.HiddenFor(model => model.mDetails[i].MemoSubject, new { htmlAttributes = new { @class = "form-control" } })
+
+                                </td>
+                                <td width="24%">
+                                    @Html.HiddenFor(model => model.mDetails[i].Dept, new { htmlAttributes = new { @class = "form-control" } })
+
+                                    @Html.DropDownListFor(model => model.mDetails[i].Dept, new SelectList(Model.mDetails[i].deptList, "value", "text"), Model.mDetails[i].deptName,
+                                        new { @class = "form-control input-sm ", @id = "Dept" + @i, @disabled = "disabled" })
+                                </td>
+
+                                <td width="4%">
+                                    @if (Model.mDetails[i].memoURL != null)
+                                    {
+                                        <a title="@Model.mDetails[i].UserMemoFileName" href="@Url.Action("Download",new { MeetingType = Model.mMaster.MeetingType, MeetingNo = Model.mMaster.MeetingNo, fileName = Model.mDetails[i].memoURL } )"><img src="~/Image/download.ico" height="25" width="25"></a>
+                                    }
+                                    else
+                                    {
+                                        <b> Not Uploaded </b>
+                                    }
+                                </td>
+                                <td width="16%">
+
+                                    <input type="file" name="Memofile" id="Memofile@(i)" class="form-control input-sm memofile01" disabled="disabled">
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6">
+                <input type="submit" value="Save" class="btn btn-primary" id="btnSubmit" role="button" style="background-color: #07889B" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#agendaChecked").click(function () {
+
+            if ($(this).is(':checked')) {
+                $("#Agendafile").attr("disabled", false);
+                $("#Agendafile").attr("required", true);
+                $("#a").attr("style", "background-color: #E37222");
+
+            }
+            else {
+                $("#Agendafile").attr("disabled", true);
+                $("#a").attr("style", "background-color: transparent");
+            }
+
+
+        });
+        $("#minutesChecked").click(function () {
+
+            if ($(this).is(':checked')) {
+                $("#Minutesfile").attr("disabled", false);
+                $("#Minutesfile").attr("required", true);
+                $("#m").attr("style", "background-color: #E37222");
+            }
+            else {
+                $("#Minutesfile").attr("disabled", true);
+                $("#m").attr("style", "background-color: transparent");
+            }
+
+
+        });
+
+
+    });
+    function highlight(i) {
+        if ($("#mDetails_" + i + "__isChecked").is(':checked')) {
+            $("#memoList" + i).attr("style", "background-color: #E37222");
+            $("#MemoSubject" + i).attr("disabled", false);
+            $("#Dept" + i).attr("disabled", false);
+            $("#Memofile" + i).attr("disabled", false);
+            $("#Memofile" + i).attr("required", true);
+
+
+        }
+        else {
+            $("#memoList" + i).attr("style", "background-color: transparent");
+            $("#MemoSubject" + i).attr("disabled", true);
+            $("#Dept" + i).attr("disabled", true);
+            $("#Memofile" + i).attr("disabled", true);
+
+        }
+
+    }
+
+</script>
+
+<script src="~/scripts/addMemo.js"></script>
+<script>
+    $(function () {
+
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("getDepartment")',
+            dataType: 'json',
+            data: {},
+            success: function (response) {
+                $("#department").append('<option value="Select">'
+                                            + "---Select Department---" + '</option>');
+                $.each(response, function (i, response) {
+                    $("#department").append('<option value="'
+                                               + response.Value + '">'
+                                         + response.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed.' + ex);
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MeetingType").val($("#MeetingType option:selected").val());
+        $("#department").val($("#department option:selected").val());
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#MeetingType").select2();
+        $("#department").select2();
+    });
+</script>

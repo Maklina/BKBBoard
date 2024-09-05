@@ -1,0 +1,233 @@
+﻿@using PagedList.Mvc;
+@model PagedList.IPagedList<BKBBoard.Models.MeetingMasterViewModel>
+
+
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (TempData["errMsg"] != null)
+{
+    <h3 style="color:red;">@TempData["errMsg"]</h3>
+
+}
+else
+{
+    <h3 style="color:green;">@TempData["retMsg"]</h3>
+}
+@if (TempData["retMsg"] != null)
+{
+    <script>
+        localStorage.clear();
+    </script>
+}
+@if (Request["meetingType"] != null)
+{
+    <h3>
+        @Request["meetingType"]
+
+        @if (Request["Number"] != null)
+        {
+            @Request["Number"]
+        }
+    </h3>
+}
+else
+{
+    <h3>BOARD MEETING</h3>
+}
+
+@using (Html.BeginForm("Index", "Meeting", FormMethod.Get, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="navbar-form">
+        <hr />
+        <div class="row">
+
+            <div class="col-md-4">
+                <select name="meetingType" id="ddlType" placeholder="Search by department" class="form-control input-sm" }></select>
+            </div>
+
+            <div class="col-md-4">
+                <select name="Number" id="Number" placeholder="Search by Meeting No" class="form-control input-sm" }></select>
+            </div>
+
+            <div class="col-md-2">
+                <input type="submit" value="Search" class="btn btn-default btn-primary" style="background-color: #07889B" />
+            </div>
+
+        </div>
+    </div>
+}
+<br>
+@*
+    @using (Html.BeginForm("Index", "Meeting", FormMethod.Get, new { enctype = "multipart/form-data" }))
+    {
+
+        <div class="navbar-form">
+            <hr />
+            <div class="row">
+
+                <div class="col-md-4">
+                    <select name="meetingType" id="ddlType" placeholder="Search by department" class="form-control input-sm" }></select>
+                </div>
+
+
+                <div class="col-md-2">
+                    <input type="submit" value="Search" class="btn btn-default btn-primary" style="background-color: #07889B" />
+                </div>
+
+            </div>
+        </div>
+    }
+    <br>*@
+<div class="table-holder">
+    <table class="table table-responsive">
+        <thead>
+            <tr>
+
+                <th>
+                    Meeting
+                </th>
+
+                <th>
+                    Date
+                </th>
+                <th>
+                    Download Agenda
+                </th>
+                <th>
+                    Download Minutes
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        @foreach (var item in Model)
+
+        {
+            var meetingNo = item.MeetingNo.ToString();
+
+
+            <tr>
+
+                <td>
+                    <b>@Html.ActionLink(item.Title, "ViewDetails", new { id = item.ID })</b>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    <a title="@item.UserFileName" href="@Url.Action("Download",new { MeetingType = item.MeetingType, MeetingNo = item.MeetingNo, fileName = item.AgendaURL } )"><img src="~/Image/download.ico" height="30" width="30" style="display: block;"></a>
+                </td>
+                <td>
+                    @if (item.MinutesURL != " ")
+                    {
+                        <a title="@item.UserMinuteFileName" href="@Url.Action("Download",new { MeetingType = item.MeetingType, MeetingNo = item.MeetingNo, fileName = item.MinutesURL } )"><img src="~/Image/download.ico" height="30" width="30" style="display: block;"></a>
+                    }
+                    else
+                    {
+                        <b> Not Uploaded </b>
+                    }
+                </td>
+                <td>
+                    @if (Session["userRoleName"].ToString() != "Viewer")
+                    {
+
+                        @Html.ActionLink("Edit", "EditMeeting", new { id = item.ID }, htmlAttributes: new { @class = "btn btn-default btn-primary", @style = "background-color: #07889B;" });
+
+                    }
+
+                    @Html.ActionLink("Details", "ViewDetails", new { id = item.ID }, htmlAttributes: new { @class = "btn btn-default btn-primary", @style = "background-color: #07889B;" })
+
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<br />
+<div class="pagi">
+    <a>&laquo;</a>
+    @for (int i = 1; i <= Model.PageCount; i++)
+    {
+        if (Model.PageNumber == i)
+        {
+            <a href="@Url.Action("index",new { MeetingType = Request["meetingType"], page=i })" class="active">@i</a>;
+        }
+        else
+        {
+            <a href="@Url.Action("index",new { MeetingType = Request["meetingType"], page=i })">@i</a>
+        }
+    }
+    <a>&raquo;</a>
+</div>
+@*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+
+<script>
+    $(function () {
+        $("#ddlType").empty();
+
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("getType")',
+            dataType: 'json',
+            data: {},
+            success: function (response) {
+                $("#ddlType").append('<option value="">'
+                    + "Select Meeting Type" + '</option>');
+                $.each(response, function (i, response) {
+
+                    $("#ddlType").append('<option value="'
+                        + response.Text + '">'
+                        + response.Text + '</option>');
+
+                });
+            },
+
+            error: function (ex) {
+                alert('Failed.' + ex);
+            }
+        });
+
+    });
+    $("#ddlType").change(function () {
+        $("#Number").empty();
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("getNoAcdType")',
+            dataType: 'json',
+            data: { 'type': $("#ddlType option:selected").val()},
+            success: function (response) {
+                $("#Number").append('<option value="">'
+                    + "Select Meeting Number" + '</option>');
+                $.each(response, function (i, response) {
+
+                    $("#Number").append('<option value="'
+                                               + response.Text + '">'
+                        + response.Text + '</option>');
+
+                });
+            },
+
+            error: function (ex) {
+                alert('Failed.' + ex);
+            }
+        });
+    });
+</script>
+<script src="~/scripts/select2.min.js"></script>
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ddlType").val($("#ddlType option:selected").val());
+        $("#Number").val($("#Number option:selected").val());
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ddlType").select2();
+        $("#Number").select2();
+    });
+</script>

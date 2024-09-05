@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (Session["LoginCredentials"] != null)
+{
+    var loginDetails = (BKBBoard.Models.LoginModels)Session["LoginCredentials"];
+    if (loginDetails.RoleName == "1")
+    {
+        <h2>Logged in as Administrator</h2>
+    }
+    else if (loginDetails.RoleName == "2")
+    {
+        <h2>Logged in as Creator</h2>
+    }
+    else if (loginDetails.RoleName == "3")
+    {
+        <h2>Logged in as Viewer</h2>
+
+    }
+}
